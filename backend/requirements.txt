@@ -1,0 +1,14 @@
+fastapi
+uvicorn[standard]
+google-adk
+google-genai
+mcp
+mcp-clickhouse
+razorpay
+clickhouse-connect
+pydantic-settings
+python-dotenv
+httpx
+python-multipart
+huggingface_hub
+razorpay
