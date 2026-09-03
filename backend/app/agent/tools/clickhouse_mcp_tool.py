@@ -45,24 +45,24 @@ def create_mcp_environment() -> dict[str, str]:
 
 
 def extract_tool_text(result) -> str:
-    if result.isError:
+    if getattr(result, "is_error", False):
         raise RuntimeError(
-            "ClickHouse MCP query failed"
+            "ClickHouse MCP tool execution failed"
         )
 
-    text_blocks = []
+    text_parts = []
 
-    for content_block in result.content:
-        block_text = getattr(
-            content_block,
+    for content_item in result.content:
+        text_value = getattr(
+            content_item,
             "text",
             None,
         )
 
-        if block_text:
-            text_blocks.append(block_text)
+        if text_value:
+            text_parts.append(text_value)
 
-    return "\n".join(text_blocks)
+    return "\n".join(text_parts)
 
 
 async def get_agent_payment_context() -> dict[str, str]:

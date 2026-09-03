@@ -153,7 +153,7 @@ async def test_mcp():
 
             print_tool_result(metrics_result)
 
-            if metrics_result.isError:
+            if getattr(metrics_result, "is_error", False):
                 raise RuntimeError(
                     "ClickHouse MCP query failed"
                 )
