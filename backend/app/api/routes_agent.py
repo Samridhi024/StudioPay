@@ -1,8 +1,14 @@
+import logging
+
 from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel, Field
 
-from app.services.agent_service import generate_agent_response
+from app.services.agent_service import (
+    generate_agent_response,
+)
 
+
+logger = logging.getLogger(__name__)
 
 router = APIRouter(
     prefix="/api/agent",
@@ -28,18 +34,28 @@ class ChatResponse(BaseModel):
     "/chat",
     response_model=ChatResponse,
 )
-async def chat_with_agent(request: ChatRequest):
+async def chat_with_agent(
+    request: ChatRequest,
+):
     try:
-        return await generate_agent_response(request.message)
+        return await generate_agent_response(
+            request.message
+        )
 
     except RuntimeError as error:
+        logger.exception(
+            "Agent runtime error"
+        )
+
         raise HTTPException(
             status_code=503,
             detail=str(error),
         ) from error
 
     except Exception as error:
-        print(f"Agent error: {error}")
+        logger.exception(
+            "Unexpected agent request error"
+        )
 
         raise HTTPException(
             status_code=502,
